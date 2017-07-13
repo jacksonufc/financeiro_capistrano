@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:define name="conteudo"> 
+		<h:form id="formulario">
+		<p:panel header="Cadastro de Usuário" style="margin-bottom:10px; text-align: center;">
+			<p:messages autoUpdate="true" closable="true" />
+			<p:panelGrid columns="2" style="margin: 0 auto;text-align: left;">
+				<h:outputLabel value="Nome:" />
+			    <p:inputText value="#{usuarioBean.usuario.nome}" required="true" maxlength="30" label="Nome" />
+			    <h:outputLabel value="Email:" />
+			    <p:inputText value="#{usuarioBean.usuario.email}" label="Email" />
+			    <h:outputLabel value="Login:" />
+			    <p:inputText value="#{usuarioBean.usuario.login}" required="true" label="Login" />
+			    <h:outputLabel value="Senha:" />
+			    <p:password value="#{usuarioBean.usuario.senha}" required="true" label="Senha" />
+			    <p:commandButton value="Salvar" disabled="#{usuarioBean.naoAdmin}" icon="ui-icon-disk" update="formulario" action="#{usuarioBean.cadastrar()}" />
+			    <p:commandButton value="Limpar" type="reset" />  
+		    </p:panelGrid>
+	    </p:panel>
+		</h:form>
+	</ui:define> 
+
+</ui:composition>

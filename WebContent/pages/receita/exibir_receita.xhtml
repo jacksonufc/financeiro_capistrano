@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">  
+		<p:toolbar id="tb" style="margin-bottom:10px;">
+			<f:facet name="left">
+		        <h:outputLabel style="display:inline;" value="Pesquise:" />
+				<h:form style="display:inline;">
+					<p:commandButton value="Por mês" type="button" onclick="PF('dlgMes').show()" />
+				</h:form>
+		    </f:facet>
+		    <f:facet name="right">
+		        <h:outputLabel style="display:inline;" value="PDF:" />
+				<h:form style="display:inline;">
+					<h:commandLink id="pdf">
+						<p:graphicImage library="img" name="pdf-icon.png" />
+						<p:dataExporter type="pdf" target=":tabela"
+							fileName="Receita_geral" encoding="iso-8859-1" />
+					</h:commandLink>
+				</h:form>
+		    </f:facet>
+		</p:toolbar>
+		<p:sticky target="tb" />
+		
+		<p:growl autoUpdate="true" />
+		<p:dataTable id="tabela" var="receitaUnica" value="#{receitaBean.receitaUnica}"
+			emptyMessage="Nenhuma receita encontrada!">
+			<f:facet name="header">
+            	Receita Geral
+        	</f:facet>
+		    <p:column headerText="Receita">
+		        <h:outputText value="#{receitaUnica.nome}" />	       
+		    </p:column>
+		    <p:column headerText="Valor">
+		        <h:outputText value="#{receitaUnica.total}">
+		        	<f:convertNumber currencySymbol="" type="currency" />
+		        </h:outputText>	
+		        <f:facet name="footer">
+			    	Total:
+			    	<h:outputText value="#{receitaBean.receitaTotal}">
+				    	<f:convertNumber type="currency" />
+			        </h:outputText>	
+		    	</f:facet>        
+		    </p:column>
+		    
+		    <f:facet name="footer">
+		    	Mês:
+		    	<h:outputText value="#{receitaBean.mes.descricao}" />
+		    	/ Ano:
+		    	<h:outputText value="#{receitaBean.ano}" />
+		    </f:facet>
+		     
+	    </p:dataTable>
+	   
+	   <p:dialog id="mes" widgetVar="dlgMes" showEffect="fade" header="Pesquisa por mês e ano">
+	   		<h:form>
+				<p:panelGrid columns="5">
+					<h:outputLabel value="Mês:" />
+					<p:selectOneMenu value="#{receitaBean.mes}" required="true" label="Mês" style="width:150px;">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+			    	  <f:selectItems value="#{receitaBean.meses}" var="mes" itemLabel="#{mes.descricao}" itemValue="#{mes}" />
+			   		</p:selectOneMenu>
+					<h:outputLabel value="Ano:" />
+					<p:inputText value="#{receitaBean.ano}" required="true" label="Ano" style="width:150px;" />
+					<p:commandButton update=":tabela :mes" value="Buscar" action="#{receitaBean.somaReceita}" />					
+				</p:panelGrid>
+	   		 </h:form>
+	   </p:dialog>
+	    
+    </ui:define>
+    
+</ui:composition> 

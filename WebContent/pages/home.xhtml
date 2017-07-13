@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">
+		<h:form id="formulario">
+			<p:panel id="painel" header="Olá, #{homeBean.nomeUsuario}"
+				style="margin-bottom:10px; text-align: center;">
+				<p:panelGrid columns="2" style="margin: 0 auto;text-align: left;">
+					<f:facet name="header">
+						<h:outputText value="BALANÇO MENSAL" />
+					</f:facet>
+
+					<h:outputLabel value="Mês: " />
+					<p:selectOneMenu id="mes" value="#{homeBean.mes}"
+						style="width:150px;" required="true" label="Mês">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems value="#{homeBean.meses}" var="mes"
+							itemLabel="#{mes.descricao}" itemValue="#{mes}" />
+						<f:ajax render=":formulario" execute="mes"
+							listener="#{homeBean.buscarDespesaReceitaTotal}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel value="Ano: " />
+					<p:inputText id="ano" value="#{homeBean.ano}" style="width:142px;"
+						required="true" label="Ano">
+						<f:ajax render=":formulario" execute="ano"
+							listener="#{homeBean.buscarDespesaReceitaTotal}" />
+					</p:inputText>
+					<h:outputLabel value="Receitas:" />
+					<h:outputText value="#{homeBean.receitaTotal}">
+						<f:convertNumber currencySymbol="" type="currency" />
+					</h:outputText>
+
+					<h:outputLabel value="Despesas:" />
+					<h:outputText value="#{homeBean.despesaTotal}">
+						<f:convertNumber currencySymbol="" type="currency" />
+					</h:outputText>
+
+					<h:outputLabel value="Saldo:" />
+					<h:outputText style="color:#{homeBean.cor}" value="#{homeBean.saldo}">
+						<f:convertNumber currencySymbol="" type="currency" />
+					</h:outputText>
+					
+					
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

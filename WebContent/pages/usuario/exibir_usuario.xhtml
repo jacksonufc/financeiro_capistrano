@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">
+		<p:toolbar id="tb" style="margin-bottom:10px;">
+			<f:facet name="left">
+		        <h:outputLabel style="display:inline;" value="Pesquise:" />
+				<h:form style="display:inline;">
+					<p:commandButton update=":formulario" value="Todos" action="#{usuarioBean.buscarTodos}" />
+				</h:form>
+		    </f:facet>
+		    <f:facet name="right">
+		        <h:outputLabel style="display:inline;" value="PDF:" />
+				<h:form style="display:inline;">
+					<h:commandLink id="pdf">
+						<p:graphicImage library="img" name="pdf-icon.png" />
+						<p:dataExporter type="pdf" target=":formulario:tabela"
+							fileName="Usuários" encoding="iso-8859-1" />
+					</h:commandLink>
+				</h:form>
+		    </f:facet>
+		</p:toolbar>
+		<p:sticky target="tb" />
+
+		<h:form id="formulario">
+			<p:growl autoUpdate="true" />
+			<p:dataTable id="tabela" var="usuario" value="#{usuarioBean.usuarios}"
+				paginator="true" rows="10" emptyMessage="Nenhum usuário encontrado!"
+				rowsPerPageTemplate="10,15,20" paginatorAlwaysVisible="false">
+				<f:facet name="header">
+            		Usuários
+        		</f:facet>
+				<p:column headerText="Nome" sortBy="#{usuario.nome}"
+					sortFunction="#{usuarioBean.sortByNome}">
+					<h:outputText value="#{usuario.nome}" />
+				</p:column>
+				<p:column headerText="Email" sortBy="#{usuario.email}"
+					sortFunction="#{usuarioBean.sortByEmail}">
+					<h:outputText value="#{usuario.email}" />
+				</p:column>
+				<p:column headerText="Login" sortBy="#{usuario.login}"
+					sortFunction="#{usuarioBean.sortByLogin}">
+					<h:outputText value="#{usuario.login}" />
+				</p:column>
+				<p:column width="60px;" style="text-align:center;" exportable="false">
+					<p:commandButton icon="ui-icon-trash" title="Excluir" disabled="#{usuarioBean.naoAdmin}"
+					    update=":formulario" action="#{usuarioBean.excluir(usuario)}">
+						<p:confirm header="Confirmar"
+							message="Tem certeza que deseja excluir?" icon="ui-icon-alert" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

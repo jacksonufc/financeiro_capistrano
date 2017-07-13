@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">		
+		<p:toolbar id="tb" style="margin-bottom:10px;">
+			<f:facet name="left">
+		        <h:outputLabel style="display:inline;" value="Pesquise:" />
+				<h:form style="display:inline;">
+					<p:commandButton value="Por mês" type="button" onclick="PF('dlgMes').show()" />
+					<p:commandButton value="Por ano" type="button" onclick="PF('dlgAno').show()" />
+				</h:form>
+		    </f:facet>
+		    <f:facet name="right">
+		        <h:outputLabel style="display:inline;" value="PDF:" />
+				<h:form style="display:inline;">
+					<h:commandLink id="pdf">
+						<p:graphicImage library="img" name="pdf-icon.png" />
+						<p:dataExporter type="pdf" target=":formulario:tabela"
+							fileName="Despesa_luz" encoding="iso-8859-1" />
+					</h:commandLink>
+				</h:form>
+		    </f:facet>
+		</p:toolbar>
+		<p:sticky target="tb" />
+
+		<h:form id="formulario">
+			<p:growl autoUpdate="true" />
+			<p:dataTable id="tabela" var="luz"
+				value="#{despesaLuzBean.despesasLuzes}" paginator="true" rows="10" paginatorAlwaysVisible="false"
+				rowsPerPageTemplate="10,15,20" emptyMessage="Nenhuma despesa de luz encontrada!">
+				<f:facet name="header">
+	            Despesa de luz
+	        	</f:facet>
+				<p:column headerText="Mês">
+					<h:outputText value="#{luz.mes.descricao}" />
+				</p:column>
+				<p:column headerText="Ano">
+					<h:outputText value="#{luz.ano}" />
+				</p:column>
+				<p:column headerText="Valor">
+					<h:outputText value="#{luz.valor}">
+						<f:convertNumber currencySymbol="" type="currency" />
+					</h:outputText>
+					<f:facet name="footer">
+				    	Total:
+				    	<h:outputText value="#{despesaLuzBean.despesaTotal}">
+				    		<f:convertNumber type="currency" />
+				    	</h:outputText>
+					</f:facet>
+				</p:column>
+				<p:column style="text-align:center; width:120px;" exportable="false">
+					<p:commandButton icon="ui-icon-pencil" update=":dlgEdit"
+						title="Atualizar"
+						action="#{despesaLuzBean.selecionarParaAtualizar(luz)}" />
+					<p:commandButton icon="ui-icon-trash" title="Excluir" update=":formulario"
+						action="#{despesaLuzBean.excluir(luz)}">
+						<p:confirm header="Confirmar"
+							message="Tem certeza que deseja excluir?" icon="ui-icon-alert" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+		<p:dialog id="dlgEdit" widgetVar="edit" header="Atualizar">
+			<h:form>
+				<p:panelGrid columns="2">
+					<h:outputLabel value="Mês:" />
+					<p:selectOneMenu value="#{despesaLuzBean.despesaLuz.mes}" required="true" label="Mês" style="width:233px;">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems value="#{despesaLuzBean.meses}" var="mes"
+							itemLabel="#{mes.descricao}" itemValue="#{mes}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Ano:" />
+					<p:inputText value="#{despesaLuzBean.despesaLuz.ano}" required="true" label="Ano" />
+					<h:outputLabel value="Valor:" />
+					<p:inputText value="#{despesaLuzBean.despesaLuz.valor}" required="true" label="Valor" />
+					<p:commandButton update=":formulario:tabela :dlgEdit"
+						value="Atualizar" action="#{despesaLuzBean.atualizar}" />
+					<p:commandButton value="Cancelar" update=":dlgEdit" />	
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog id="ano" widgetVar="dlgAno" header="Pesquisa por ano"
+			showEffect="fade">
+			<h:form>
+				<p:panelGrid columns="3">
+					<h:outputLabel value="Ano:" />
+					<p:inputText value="#{despesaLuzBean.ano}" required="true" label="Ano" style="width:150px;" />
+					<p:commandButton update=":formulario:tabela :ano" value="Buscar"
+						action="#{despesaLuzBean.buscarPorAno}" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog id="mes" widgetVar="dlgMes" header="Pesquisa por mês e ano"
+			showEffect="fade">
+			<h:form>
+				<p:panelGrid columns="5">
+					<h:outputLabel value="Mês:" />
+					<p:selectOneMenu value="#{despesaLuzBean.mes}" required="true" label="Mês" style="width:150px;">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems value="#{despesaLuzBean.meses}" var="mes"
+							itemLabel="#{mes.descricao}" itemValue="#{mes}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Ano:" />
+					<p:inputText value="#{despesaLuzBean.ano}" required="true" label="Ano" style="width:150px;" />
+					<p:commandButton update=":formulario:tabela :mes" value="Buscar"
+						action="#{despesaLuzBean.buscarPorMesAno}" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

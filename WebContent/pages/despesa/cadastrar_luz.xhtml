@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">	
+		
+		<h:form id="formulario">
+			<p:panel header="Cadastro de luz" style="margin-bottom:10px; text-align: center;">
+				<p:messages autoUpdate="true" closable="true" />
+			    <p:panelGrid columns="2" style="margin: 0 auto;text-align: left;">
+			    	<h:outputLabel value="Mês:" />
+			    	<p:selectOneMenu value="#{despesaLuzBean.despesaLuz.mes}" required="true" label="Mês" style="width:233px;">
+				    	  <f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+				    	  <f:selectItems value="#{despesaLuzBean.meses}" var="mes" itemLabel="#{mes.descricao}" itemValue="#{mes}" />
+				    </p:selectOneMenu>
+				    <h:outputLabel value="Ano:" />
+				    <p:inputText value="#{despesaLuzBean.despesaLuz.ano}" required="true" label="Ano" />
+				    <h:outputLabel value="Valor:" />
+				    <p:inputText value="#{despesaLuzBean.despesaLuz.valor}" required="true" label="Valor" />
+				    <p:commandButton update="formulario" value="Salvar" icon="ui-icon-disk" action="#{despesaLuzBean.cadastrar}" />
+				     <p:commandButton value="Limpar" type="reset" />
+			    </p:panelGrid>
+		    </p:panel>	    
+	    </h:form>
+	    
+    </ui:define>
+    
+</ui:composition> 

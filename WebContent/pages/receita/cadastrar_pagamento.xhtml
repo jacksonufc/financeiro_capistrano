@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">
+		<h:form id="formulario">
+			<p:panel header="Cadastro de Pagamento"
+				style="margin-bottom:10px; text-align: center;">
+				<p:messages autoUpdate="true" closable="true" />
+				<p:panelGrid columns="2" style="margin: 0 auto;text-align: left;">
+					<h:outputLabel value="Secretária:" />
+					<p:row>
+						<p:autoComplete id="nome" forceSelection="true"
+							value="#{receitaPagamentoBean.pagamento.secretaria.nome}"
+							completeMethod="#{receitaPagamentoBean.buscarTodosSecretarias}" 
+							title="Digite o nome e escolha uma opção!" minQueryLength="3"
+							scrollHeight="200" required="true" label="Secretaria" />
+						<p:tooltip for="nome" showEvent="focus" hideEvent="blur" />
+					</p:row>
+					<h:outputLabel value="Valor:" />
+					<p:inputText value="#{receitaPagamentoBean.pagamento.valor}"
+						required="true" label="Valor" />
+					<h:outputLabel value="Mês:" />
+					<p:selectOneMenu value="#{receitaPagamentoBean.pagamento.mes}"
+						required="true" label="Mês" style="width:233px;">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems value="#{receitaPagamentoBean.meses}" var="mes"
+							itemLabel="#{mes.descricao}" itemValue="#{mes}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Ano:" />
+					<p:inputText value="#{receitaPagamentoBean.pagamento.ano}"
+						required="true" label="Ano" />
+					<h:outputLabel value="Descrição:" />
+					<p:inputTextarea
+						value="#{receitaPagamentoBean.pagamento.descricao}" />
+					<p:commandButton value="Salvar" icon="ui-icon-disk" update="formulario"
+						action="#{receitaPagamentoBean.cadastrar}" />
+					<p:commandButton value="Limpar" type="reset" />
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

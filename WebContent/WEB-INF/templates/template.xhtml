@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Sistema Financeiro</title>
+	<link rel="icon" href="../../resources/img/icon-16.png" type="image/png" />
+	<link rel="icon" href="../resources/img/icon-16.png" type="image/png" />
+</h:head>
+<h:body style="background-color:#1E90FF;">
+	<f:view locale="pt_BR">
+		<div id="pagina">
+			<div id="cabecalho" style="background-color:#1E90FF; margin-left:15px;">
+				<!--  <img src="../../resources/img/logo_sonho.png" alt="Logo" style="width:40px;height:40px;" />-->
+				<h1 style="color:white; margin-left:10px; font-size: 38px;"><span style="color:green; font-size: 70px;">$</span>istema <span style="color:green;font-size: 70px;">F</span>inanceiro</h1>
+				<!--  <h3 style="color: white; float:right; clear:left;">Escola Sonho C<span style="color:red;">o</span>l<span style="color:black;">o</span>r<span style="color:green;">i</span>d<span style="color:yellow;">o</span></h3>-->	 
+			</div>
+			
+			<div id="menu">
+				<h:form>
+					<p:growl id="messages" />
+					<p:menubar>
+						<p:menuitem value="Início" icon="ui-icon-home" url="/pages/home.xhtml" />
+						<p:submenu label="Receita" icon="ui-icon-plus">
+							<p:submenu label="Pagamentos">
+								<p:menuitem value="Cadastrar" url="/pages/receita/cadastrar_pagamento.xhtml" />
+								<p:menuitem value="Exibir" url="/pages/receita/exibir_pagamento.xhtml" />
+							</p:submenu>
+							<p:separator />
+							<p:submenu label="Extra">
+								<p:menuitem value="Cadastrar" url="/pages/receita/cadastrar_extra.xhtml" />
+								<p:menuitem value="Exibir" url="/pages/receita/exibir_extra.xhtml" />
+							</p:submenu>
+							<p:separator />
+							<p:menuitem value="Receita Total" url="/pages/receita/exibir_receita.xhtml" />
+						</p:submenu>
+						<p:submenu label="Despesa" icon="ui-icon-minus">
+							<p:submenu label="Funcionário">
+								<p:menuitem value="Cadastrar" url="/pages/despesa/cadastrar_desp_funcionario.xhtml" />
+								<p:menuitem value="Exibir" url="/pages/despesa/exibir_desp_funcionario.xhtml" />
+							</p:submenu>
+							<p:separator />
+							<p:submenu label="Água">
+								<p:menuitem value="Cadastrar" url="/pages/despesa/cadastrar_agua.xhtml" />
+								<p:menuitem value="Exibir" url="/pages/despesa/exibir_agua.xhtml" />
+							</p:submenu>
+							<p:separator />
+							<p:submenu label="Luz">
+								<p:menuitem value="Cadastrar" url="/pages/despesa/cadastrar_luz.xhtml" />
+								<p:menuitem value="Exibir" url="/pages/despesa/exibir_luz.xhtml" />
+							</p:submenu>
+							<p:separator />
+							<p:submenu label="Cartão">
+							<p:menuitem value="Cadastrar" url="/pages/despesa/cadastrar_cartao.xhtml" />
+							<p:menuitem value="Exibir" url="/pages/despesa/exibir_cartao.xhtml" />
+							</p:submenu>
+							<p:separator />
+							<p:submenu label="Diária">
+							<p:menuitem value="Cadastrar" url="/pages/despesa/cadastrar_diaria.xhtml" />
+							<p:menuitem value="Exibir" url="/pages/despesa/exibir_diaria.xhtml" />
+							</p:submenu>
+							<p:separator />
+							<p:submenu label="Extra">
+								<p:menuitem value="Cadastrar" url="/pages/despesa/cadastrar_extra.xhtml" />
+								<p:menuitem value="Exibir" url="/pages/despesa/exibir_extra.xhtml" />
+							</p:submenu>
+							<p:separator />
+							<p:menuitem value="Despesa total" url="/pages/despesa/exibir_despesa.xhtml" />
+						</p:submenu>
+						<p:submenu label="Setor" icon="ui-icon-suitcase">
+							<p:menuitem value="Cadastrar" url="/pages/secretaria/cadastrar_secretaria.xhtml" />
+							<p:menuitem value="Exibir" url="/pages/secretaria/exibir_secretaria.xhtml" />
+						</p:submenu>
+						<p:submenu label="Funcionário" icon="ui-icon-person">
+							<p:menuitem value="Cadastrar" url="/pages/funcionario/cadastrar_funcionario.xhtml" />
+							<p:menuitem value="Exibir" url="/pages/funcionario/exibir_funcionario.xhtml" />
+						</p:submenu>
+						<p:submenu label="Usuário" icon="ui-icon-person">
+							<p:menuitem value="Cadastrar" url="/pages/usuario/cadastrar_usuario.xhtml" />
+							<p:menuitem value="Exibir" url="/pages/usuario/exibir_usuario.xhtml" />
+						</p:submenu>
+						<p:submenu label="Minha conta" icon="ui-icon-gear">
+							<p:menuitem value="Altera perfil" url="/pages/usuario/alterar_perfil.xhtml" />
+							<p:menuitem value="Altera senha" url="/pages/usuario/alterar_senha.xhtml" />
+						</p:submenu>
+						
+						 <f:facet name="options">
+				            <p:commandButton action="#{loginBean.sair}" value="Sair" icon="ui-icon-extlink" />
+				        </f:facet>
+					</p:menubar>
+				</h:form>
+			</div>
+			
+			<div id="conteudo" style="min-height: 500px; margin-top: 10px; background-color: #fafaf4; -webkit-border-radius: 5px;">
+				<ui:insert name="conteudo">Conteudo</ui:insert>
+			</div>
+			
+			<div id="rodape" style="heigth:50px">
+				<h:panelGrid  width="100%" style="text-align:center; background-color:#1E90FF; height:50px">
+					<h1 style="color:white; font-size: 15px; font-variant: small-caps;">&copy; Copyright. Todos os direitos reservados.</h1>
+				</h:panelGrid>
+			</div>
+		</div>
+	</f:view>
+</h:body>
+</html>

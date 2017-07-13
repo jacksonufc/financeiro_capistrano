@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">		
+		<p:toolbar id="tb" style="margin-bottom:10px;">
+			<f:facet name="left">
+		        <h:outputLabel style="display:inline;" value="Pesquise:" />
+				<h:form style="display:inline;">
+					<p:commandButton value="Por tipo" type="button" onclick="PF('dlgTipo').show()" />
+					<p:commandButton update=":formulario:tabela" value="Ativos" action="#{funcionarioBean.buscarAtivo}" />
+					<p:commandButton update=":formulario:tabela" value="Inativos" action="#{funcionarioBean.buscarInativo}" />
+				</h:form>
+
+		    </f:facet>
+		    <f:facet name="right">
+		        <h:outputLabel style="display:inline;" value="PDF:" />
+				<h:form style="display:inline;">
+					<h:commandLink id="pdf">
+						<p:graphicImage library="img" name="pdf-icon.png" />
+						<p:dataExporter type="pdf" target=":formulario:tabela"
+							fileName="Funcionários" encoding="iso-8859-1" />
+					</h:commandLink>
+				</h:form>
+		    </f:facet>
+		</p:toolbar>
+		<p:sticky target="tb" />
+
+
+		<h:form id="formulario">
+			<p:growl autoUpdate="true" />
+			<p:dataTable id="tabela" var="funcionario" 
+				value="#{funcionarioBean.funcionarios}" paginator="true" rows="10"
+				emptyMessage="Nenhum funcionário encontrado!"
+				rowsPerPageTemplate="10,15,20" paginatorAlwaysVisible="false">
+				<f:facet name="header">
+            		Funcionários
+        		</f:facet>
+				<p:column headerText="Cpf">
+					<h:outputText value="#{funcionario.cpf}" />
+				</p:column>
+				<p:column headerText="Nome">
+					<h:outputText value="#{funcionario.nome}" />
+				</p:column>
+				<p:column headerText="Tipo">
+					<h:outputText value="#{funcionario.tipo.descricao}" />
+				</p:column>
+				<p:column headerText="Salário">
+					<h:outputText value="#{funcionario.salario}">
+						<f:convertNumber currencySymbol="" type="currency" />
+					</h:outputText>
+					<f:facet name="footer">
+						<h:outputLabel value="Total:" />
+		        		<h:outputText value="#{funcionarioBean.salarioTotal}">
+		        			<f:convertNumber type="currency" />
+		        		</h:outputText>
+					</f:facet>
+				</p:column>
+				<p:column style="text-align:center; width:120px;" exportable="false">
+					<p:commandButton icon="ui-icon-pencil" update=":dlgEdit"
+						title="Atualizar"
+						action="#{funcionarioBean.selecionarParaAtualizar(funcionario)}" />
+					<p:commandButton icon="ui-icon-trash" title="Excluir" update=":formulario"
+						action="#{funcionarioBean.excluir(funcionario)}">
+						<p:confirm header="Confirmar"
+							message="Tem certeza que deseja excluir?" icon="ui-icon-alert" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+		<p:dialog id="dlgEdit" widgetVar="edit" header="Atualizar">
+			<h:form>
+				<p:panelGrid columns="2">
+					<h:outputLabel value="Cpf:" />
+					<p:inputText value="#{funcionarioBean.funcionario.cpf}"
+						disabled="true" />
+					<h:outputLabel value="Nome:" />
+					<p:inputText value="#{funcionarioBean.funcionario.nome}" required="true" maxlength="30" />
+					<h:outputLabel value="Tipo:" />
+					<p:selectOneMenu value="#{funcionarioBean.funcionario.tipo}" style="width:232px;" required="true">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems value="#{funcionarioBean.tipos}" var="tipo"
+							itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Ativo" />
+					<p:selectOneRadio value="#{funcionarioBean.funcionario.ativo}" required="true">
+						<f:selectItem itemLabel="Sim" itemValue="true" />
+						<f:selectItem itemLabel="Não" itemValue="false" />
+					</p:selectOneRadio>
+					<h:outputLabel value="Salário:" />
+					<p:inputText value="#{funcionarioBean.funcionario.salario}" required="true" />
+					<p:commandButton value="Atualizar" update=":dlgEdit :formulario"
+						action="#{funcionarioBean.atualizar}" />
+					<p:commandButton value="Cancelar" update=":dlgEdit" />	
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog id="tipo" header="Pesquisa por tipo" widgetVar="dlgTipo"
+			showEffect="fade">
+			<h:form>
+				<p:panelGrid columns="3">
+					<h:outputLabel value="Tipo:" />
+					<p:selectOneMenu value="#{funcionarioBean.tipo}">
+						<f:selectItems value="#{funcionarioBean.tipos}" var="tipo"
+							itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
+					</p:selectOneMenu>
+					<p:commandButton update=":formulario :tipo" value="Buscar"
+						action="#{funcionarioBean.buscarPorTipo}" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

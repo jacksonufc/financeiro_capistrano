@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">
+		<h:form id="formulario">
+			<p:panel header="Cadastro de Funcionário"
+				style="margin-bottom:10px; text-align: center;">
+				<p:messages autoUpdate="true" closable="true" />
+				<p:panelGrid columns="2" style="margin: 0 auto;text-align: left;">
+					<h:outputLabel for="cpf" value="Cpf:" />
+					<p:inputMask id="cpf" value="#{funcionarioBean.funcionario.cpf}"
+						mask="999.999.999-99" required="true" label="Cpf" />
+					<h:outputLabel for="nome" value="Nome:" />
+					<p:inputText id="nome" value="#{funcionarioBean.funcionario.nome}"
+						required="true" maxlength="40" label="Nome" />
+					<h:outputLabel for="tipo" value="Tipo:" />
+					<p:selectOneMenu id="tipo"
+						value="#{funcionarioBean.funcionario.tipo}" required="true"
+						style="width:233px;" label="Tipo">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems value="#{funcionarioBean.tipos}" var="tipo"
+							itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
+					</p:selectOneMenu>
+					<h:outputLabel for="salario" value="Salário:" />
+					<p:inputText id="salario"
+						value="#{funcionarioBean.funcionario.salario}" required="true"
+						label="Salário" />
+					<p:commandButton value="Salvar" update="formulario"
+						action="#{funcionarioBean.cadastrar}" icon="ui-icon-disk" />
+					<p:commandButton value="Limpar" type="reset" />
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

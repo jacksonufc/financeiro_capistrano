@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">
+		<p:toolbar id="tb" style="margin-bottom:10px;">
+			<f:facet name="left">
+		        <h:outputLabel style="display:inline;" value="Pesquise:" />
+				<h:form style="display:inline;">
+					<p:commandButton value="Inadiplentes" type="button" onclick="PF('dlgIna').show()"/>
+				</h:form>
+		    </f:facet>
+		    <f:facet name="right">
+		        <h:outputLabel style="display:inline;" value="PDF:" />
+				<h:form style="display:inline;">
+					<h:commandLink id="pdf">
+						<p:graphicImage library="img" name="pdf-icon.png" />
+						<p:dataExporter type="pdf" target=":tab"
+							fileName="Inadimplentes" encoding="iso-8859-1" />
+					</h:commandLink>
+				</h:form>
+		    </f:facet>
+		</p:toolbar>
+		<p:sticky target="tb" />
+		
+		<p:dataTable id="tab" var="aluno" value="#{alunoBean.alunos}" paginator="true" rows="10"
+			emptyMessage="Nenhum inadiplente encontrado!" rowsPerPageTemplate="10,15,20" paginatorAlwaysVisible="false">
+			<f:facet name="header">
+            	Aluno
+        	</f:facet>
+		    <p:column headerText="Nome" sortBy="#{aluno.nome}" sortFunction="#{alunoBean.sortByNome}">
+		        <h:outputText value="#{aluno.nome}" />
+		    </p:column>
+		    <p:column headerText="Sexo">
+		    	<h:outputText value="#{aluno.sexo}" />
+		    </p:column>
+		    <p:column headerText="Data de nascimento">
+		    	<h:outputText value="#{aluno.dataNascimento}">
+		    		<f:convertDateTime pattern="dd/MM/yyyy" />
+		    	</h:outputText>
+		    </p:column>
+	    </p:dataTable>
+	    
+	     <p:dialog id="mes" widgetVar="dlgIna" showEffect="fade" header="Pesquisa por inadiplentes">
+	    	<h:form>
+				<p:panelGrid columns="5">
+					<h:outputLabel value="Mês:" />
+					<p:selectOneMenu value="#{alunoBean.mes}" required="true" label="Mês" style="width:150px;">
+			    	  <f:selectItems value="#{alunoBean.meses}" var="mes" itemLabel="#{mes.descricao}" itemValue="#{mes}" />
+			   		</p:selectOneMenu>
+					<h:outputLabel value="Ano:" />
+					<p:inputText value="#{alunoBean.ano}" required="true" label="Ano" style="width:150px;" />
+					<p:commandButton update=":tab :mes" value="Buscar" action="#{alunoBean.buscarPorNaoPagante}" />					
+				</p:panelGrid>
+	   		 </h:form>
+	    </p:dialog> 
+    </ui:define>
+    
+</ui:composition>   

@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">
+			<p:toolbar id="tb" style="margin-bottom:10px;">
+			<f:facet name="left">
+		        <h:outputLabel style="display:inline;" value="Pesquise:" />
+				<h:form style="display:inline;">
+					<p:commandButton value="Por ano" type="button" onclick="PF('dlgAno').show()" />
+				</h:form>
+		    </f:facet>
+		    <f:facet name="right">
+		        <h:outputLabel style="display:inline;" value="PDF:" />
+				<h:form style="display:inline;">
+					<h:commandLink id="pdf">
+						<p:graphicImage library="img" name="pdf-icon.png" />
+						<p:dataExporter type="pdf" target=":formulario:tabela"
+							fileName="Receita_pagamento" encoding="iso-8859-1" />
+					</h:commandLink>
+				</h:form>
+		    </f:facet>
+		</p:toolbar>
+		<p:sticky target="tb" />
+
+		<h:form id="formulario">
+			<p:growl autoUpdate="true" />
+			<p:dataTable id="tabela" var="pagamento" emptyMessage="Nenhuma receita de pagamento encontrada!"
+				value="#{receitaPagamentoBean.pagamentos}" paginator="true"
+				rows="10" sortMode="multiple" rowsPerPageTemplate="10,15,20" paginatorAlwaysVisible="false">
+				<f:facet name="header">
+            		Receita de pagamentos
+        		</f:facet>
+				<p:column headerText="Secretária" sortBy="#{pagamento.secretaria.nome}"
+					sortFunction="#{receitaPagamentoBean.sortByNome}">
+					<h:outputText value="#{pagamento.secretaria.nome}" />
+				</p:column>
+				<p:column headerText="Mês">
+					<h:outputText value="#{pagamento.mes.descricao}" />
+				</p:column>
+				<p:column headerText="Ano">
+					<h:outputText value="#{pagamento.ano}" />
+				</p:column>
+				<p:column headerText="Descrição">
+					<h:outputText value="#{pagamento.descricao}" />
+				</p:column>
+				<p:column headerText="Valor">
+					<h:outputText value="#{pagamento.valor}">
+						<f:convertNumber currencySymbol="" type="currency" />
+					</h:outputText>
+					<f:facet name="footer">
+			    	Total:
+			    	<h:outputText value="#{receitaPagamentoBean.receitaTotal}">
+			    		<f:convertNumber type="currency" />
+			    	</h:outputText>
+					</f:facet>
+				</p:column>
+				<p:column style="text-align:center; width:120px;" exportable="false">
+					<p:commandButton icon="ui-icon-pencil" update=":dlgEdit"
+						action="#{receitaPagamentoBean.selecionarParaAtualizar(pagamento)}" />
+					<p:commandButton icon="ui-icon-trash" update=":formulario"
+						action="#{receitaPagamentoBean.excluir(pagamento)}"
+						title="Excluir">
+						<p:confirm header="Confirmar"
+							message="Tem certeza que deseja excluir?" icon="ui-icon-alert" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+		<p:dialog id="dlgEdit" widgetVar="edit" header="Atualizar">
+			<h:form>
+				<p:panelGrid columns="2">
+					<h:outputLabel value="Nome da secretária:" />
+					<p:autoComplete id="nome"
+						value="#{receitaPagamentoBean.pagamento.secretaria.nome}"
+						completeMethod="#{receitaPagamentoBean.buscarTodosSecretarias}"
+						disabled="true" minQueryLength="3" scrollHeight="200" />
+					<h:outputLabel value="Valor:" />
+					<p:inputText value="#{receitaPagamentoBean.pagamento.valor}" required="true" label="Valor" />
+					<h:outputLabel value="Mês:" />
+					<p:selectOneMenu value="#{receitaPagamentoBean.pagamento.mes}" required="true" label="Mês" style="width:233px;">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems value="#{receitaPagamentoBean.meses}" var="mes"
+							itemLabel="#{mes.descricao}" itemValue="#{mes}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Ano:" />
+					<p:inputText value="#{receitaPagamentoBean.pagamento.ano}" disabled="true" required="true" label="Ano" />
+					<h:outputLabel value="Descrição:" />
+					<p:inputTextarea
+						value="#{receitaPagamentoBean.pagamento.descricao}" />
+					<p:commandButton value="Atualizar" update=":dlgEdit :formulario"
+						action="#{receitaPagamentoBean.atualizar}" />
+					<p:commandButton value="Cancelar" update=":dlgEdit" />	
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog id="ano" widgetVar="dlgAno" showEffect="fade"
+			header="Pesquisa por ano">
+			<h:form>
+				<p:panelGrid columns="3">
+					<h:outputLabel value="Ano:" />
+					<p:inputText value="#{receitaPagamentoBean.ano}" required="true" label="Ano" style="width:150px;" />
+					<p:commandButton update=":formulario:tabela :ano" value="Buscar"
+						action="#{receitaPagamentoBean.buscarPorAno}" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

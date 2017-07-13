@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Sistema Financeiro</title>
+	<link rel="icon" href="resources/img/icon-16.png" type="image/png" />
+</h:head>
+<h:body style="background-color:#1E90FF;">
+	<f:view locale="pt_BR">
+		<h:panelGrid width="100%" style="text-align:center; background-color:#1E90FF;">
+			<h1 style="color: white; font-size: 50px; border-top: 3px solid white; border-bottom: 3px solid white;"><span style="color:green;">$</span>istema <span style="color:green;">F</span>inanceiro</h1>
+		</h:panelGrid>
+		<p:panel id="painel" header="Login" style="width:400px; text-align:center; margin: 0 auto; margin-top:10px;" >
+			<p:focus context="painel"/>
+			<h:form>
+				<p:messages autoUpdate="true"  closable="true" />
+				<h:panelGrid columns="1" cellpadding="10" style="height:200px; margin: 0 auto; margin-top:10px;">
+					<p:inputText placeholder="Usuário"  value="#{loginBean.usuario.login}" required="true" label="Usuário" />
+					<p:password placeholder="Senha" value="#{loginBean.usuario.senha}" required="true" label="Senha" />
+					<p:commandButton id="saveBtn" value="Entrar" action="#{loginBean.logar}" style="width:233px;" />
+				</h:panelGrid>
+			</h:form>
+		</p:panel>
+	</f:view>
+</h:body>
+</html>

@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition template="/WEB-INF/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">
+		<p:toolbar id="tb" style="margin-bottom:10px;">
+			<f:facet name="left">
+		        <h:outputLabel style="display:inline;" value="Pesquise:" />
+				<h:form style="display:inline;">
+					<p:commandButton value="Por tipo" type="button" onclick="PF('dlgTipo').show()" />
+					<p:commandButton value="Todos" update=":formulario" action="#{despesaFuncionarioBean.buscarFuncionariosAtivos}" />
+				</h:form>
+		    </f:facet>
+		</p:toolbar>
+		<p:sticky target="tb" />
+
+		<h:form id="formulario">
+			<p:growl autoUpdate="true" />
+			<p:dataTable id="tabela" var="funcionario" emptyMessage="Nenhum funcionário encontrado!"
+				value="#{despesaFuncionarioBean.funcionarios}" rowsPerPageTemplate="10,15,20"
+				selection="#{despesaFuncionarioBean.funcSelecionados}"
+				rowKey="#{funcionario.cpf}" paginator="true" rows="10" paginatorAlwaysVisible="false">
+				<f:facet name="header">
+	            	Cadastro de despesa com funcionários
+	        	</f:facet>
+				<p:column selectionMode="multiple"
+					style="width:16px;text-align:center" />
+				<p:column headerText="Cpf">
+					<h:outputText value="#{funcionario.cpf}" />
+				</p:column>
+				<p:column headerText="Nome">
+					<h:outputText value="#{funcionario.nome}" />
+				</p:column>
+				<p:column headerText="Tipo">
+					<h:outputText value="#{funcionario.tipo.descricao}" />
+				</p:column>
+				<p:column headerText="Salário">
+					<h:outputText value="#{funcionario.salario}">
+						<f:convertNumber currencySymbol="" type="currency" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+			<p:panel header="Período">
+			<p:panelGrid columns="2">
+				<h:outputLabel value="Mês:" />
+				<p:selectOneMenu style="width:233px;" required="true" label="Mês"
+					value="#{despesaFuncionarioBean.despesaFuncionario.mes}">
+					<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+					<f:selectItems value="#{despesaFuncionarioBean.meses}" var="mes"
+						itemLabel="#{mes.descricao}" itemValue="#{mes}" />
+				</p:selectOneMenu>
+				<h:outputLabel value="Ano:" />
+				<p:inputText value="#{despesaFuncionarioBean.despesaFuncionario.ano}"
+					required="true" label="Ano" />
+				<p:commandButton value="Salvar" update=":formulario" icon="ui-icon-disk"
+					action="#{despesaFuncionarioBean.cadastrar}" />
+			</p:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<p:dialog id="tipo" widgetVar="dlgTipo" header="Pesquisa por tipo"
+			showEffect="fade">
+			<h:form>
+				<p:panelGrid columns="3">
+					<h:outputLabel value="Tipo:" />
+					<p:selectOneMenu value="#{despesaFuncionarioBean.tipoFuncionario}" required="true" label="Tipo">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems value="#{despesaFuncionarioBean.tiposFuncionarios}"
+							var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
+					</p:selectOneMenu>
+					<p:commandButton update=":formulario :tipo" value="Buscar"
+						action="#{despesaFuncionarioBean.buscarFuncionariosPorTipo}" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>
